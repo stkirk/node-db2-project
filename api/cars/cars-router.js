@@ -13,7 +13,7 @@ router.get("/", (req, res, next) => {
 });
 
 router.get("/:id", checkCarId, (req, res, next) => {
-  res.send("GET cars by ID working...");
+  res.json(req.car);
 });
 
 router.post("/", (req, res, next) => {
