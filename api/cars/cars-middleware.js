@@ -1,13 +1,14 @@
+const Cars = require("../cars/cars-model");
 const db = require("../../data/db-config");
 
 const checkCarId = (req, res, next) => {
   const { id } = req.params;
-  db("cars")
-    .where({ id: id })
+  Cars.getById(id)
     .then((car) => {
       if (!car) {
         next({ status: 404, message: `car with id ${id} is not found` });
       } else {
+        req.car = car;
         next();
       }
     })
