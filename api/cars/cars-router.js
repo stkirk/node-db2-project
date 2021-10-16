@@ -17,7 +17,7 @@ router.get("/", (req, res, next) => {
     .catch(next);
 });
 
-router.get("/:id", checkCarId, (req, res, next) => {
+router.get("/:id", checkCarId, (req, res) => {
   res.json(req.car);
 });
 
@@ -27,7 +27,11 @@ router.post(
   checkVinNumberValid,
   checkVinNumberUnique,
   (req, res, next) => {
-    res.send("POST car working...");
+    Cars.create(req.body)
+      .then((newCar) => {
+        res.status(201).json(newCar);
+      })
+      .catch(next);
   }
 );
 

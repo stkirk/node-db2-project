@@ -26,7 +26,7 @@ const checkCarPayload = (req, res, next) => {
       { name: "mileage", exists: mileage },
     ];
     const errStringArray = requiredFields.filter((field) => !field.exists);
-    console.log("errStringArray --> ", errStringArray);
+    // console.log("errStringArray --> ", errStringArray);
     next({ status: 400, message: `${errStringArray[0].name} is missing` });
   } else if (typeof mileage !== "number") {
     next({ status: 400, message: "mileage must be a number" });
@@ -44,9 +44,10 @@ const checkVinNumberValid = (req, res, next) => {
   }
 };
 
+//issue with the message return --> check failed test and troubleshoot
 const checkVinNumberUnique = async (req, res, next) => {
-  const vinCopy = await db("cars").where({ vin: req.body.vin }).first();
-  if (vinCopy) {
+  const duplicateVin = await db("cars").where({ vin: req.body.vin }).first();
+  if (duplicateVin) {
     next({ status: 400, message: `vin ${req.body.vin} already exists` });
   } else {
     next();
