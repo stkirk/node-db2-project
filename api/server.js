@@ -15,8 +15,8 @@ server.get("/", (req, res, next) => {
     `);
 });
 
-server.use("*", (req, res) => {
-  res.status(404).json({ message: "not found" });
+server.use("*", (req, res, next) => {
+  next({ status: 404, message: "not found" });
 });
 
 //error handling middleware

@@ -1,5 +1,4 @@
 const Cars = require("../cars/cars-model");
-const db = require("../../data/db-config");
 const vinValidator = require("vin-validator");
 
 const checkCarId = (req, res, next) => {
@@ -46,11 +45,15 @@ const checkVinNumberValid = (req, res, next) => {
 
 //issue with the message return --> check failed test and troubleshoot
 const checkVinNumberUnique = async (req, res, next) => {
-  const duplicateVin = await db("cars").where({ vin: req.body.vin }).first();
-  if (duplicateVin) {
-    next({ status: 400, message: `vin ${req.body.vin} already exists` });
-  } else {
-    next();
+  try {
+    const duplicateVin = await Cars.getByVin(req.body.vin);
+    if (!duplicateVin) {
+      next();
+    } else {
+      next({ status: 400, message: `vin ${req.body.vin} already exists` });
+    }
+  } catch (err) {
+    next(err);
   }
 };
 
